@@ -1,25 +1,27 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React, { useState } from "react";
+import { BrowserRouter as Router, Route } from "react-router-dom";
+import ImageList from "./features/image-list";
+import About from "./features/about";
+import Navigation from './features/navigation';
+
+import { PicSumContext } from "./context/picsum-context";
+import { useFetch } from "./utils/useFetch";
+import endpoints from "./utils/endpoints";
 
 function App() {
+  const [ picSum, setPicSum ] = useState([]); 
+  useFetch(endpoints.images.getList(), setPicSum);
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <PicSumContext.Provider value={picSum}>
+      <Router>
+        <div>
+          <Route path="/" component={Navigation} />
+          <Route path="/images" exact component={ImageList} />
+          <Route path="/about" exact component={About} />
+        </div>
+      </Router>
+    </PicSumContext.Provider>
   );
 }
 
